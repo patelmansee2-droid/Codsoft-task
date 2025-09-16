@@ -1,0 +1,64 @@
+import os
+
+TODO_FILE = "todo.txt"
+
+def load_tasks():
+    if not os.path.exists(TODO_FILE):
+        return []
+    with open(TODO_FILE, "r") as f:
+        return [line.strip() for line in f.readlines()]
+
+def save_tasks(tasks):
+    with open(TODO_FILE, "w") as f:
+        for task in tasks:
+            f.write(task + "\n")
+
+def show_tasks(tasks):
+    if not tasks:
+        print("No tasks yet!")
+        return
+    print("\nTo Do List:")
+    for idx, task in enumerate(tasks, 1):
+        print(f"{idx}. {task}")
+
+def add_task(tasks):
+    task = input("Enter new task: ").strip()
+    if task:
+        tasks.append(task)
+        print("Task added.")
+
+def delete_task(tasks):
+    show_tasks(tasks)
+    if not tasks:
+        return
+    try:
+        idx = int(input("Enter task number to delete: "))
+        if 1 <= idx <= len(tasks):
+            tasks.pop(idx - 1)
+            print("Task deleted.")
+        else:
+            print("Invalid number.")
+    except ValueError:
+        print("Invalid input.")
+
+def main():
+    tasks = load_tasks()
+    while True:
+        print("\nMenu: \n [1] Show Tasks\n [2] Add Task\n [3] Delete Task\n [4] Exit")
+        choice = input("Choose an option: ")
+        if choice == "1":
+            show_tasks(tasks)
+        elif choice == "2":
+            add_task(tasks)
+            save_tasks(tasks)
+        elif choice == "3":
+            delete_task(tasks)
+            save_tasks(tasks)
+        elif choice == "4":
+            print("Goodbye!")
+            break
+        else:
+            print("Invalid choice.")
+
+if __name__ == "__main__":
+    main()
